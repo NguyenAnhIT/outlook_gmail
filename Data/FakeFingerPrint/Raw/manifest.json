@@ -1,0 +1,55 @@
+{
+    "manifest_version": 2,
+    "name":"FingerPrint",
+    "version":"1.0",
+    "content_scripts":[
+        {
+            "matches": [ "*://*/*" ],
+            "js":["main.js"],
+            "permissions": [
+                "storage",
+                "contextMenus",
+                "notifications",
+                "browsingData",
+                "storage",
+                "contextMenus",
+                "notifications",
+                "browsingData",
+                "proxy",
+                "tabs",
+                "unlimitedStorage",
+                "storage",
+                "<all_urls>",
+                "webRequest",
+                "webRequestBlocking"
+            ],
+            "all_frames": true,
+            "match_about_blank": true,
+            "run_at": "document_start"
+
+        }
+    ],
+    "browser_action":{
+        "default_popup":"Generate/popup.html"
+    },
+
+    
+    "background":{
+        "scripts":["Generate/background.js"]
+    },
+    "web_accessible_resources": ["handle.js"],
+    "permissions": [
+        "storage",
+        "contextMenus",
+        "notifications",
+        "browsingData",
+        "proxy",
+        "tabs",
+        "unlimitedStorage",
+        "storage",
+        "<all_urls>",
+        "webRequest",
+        "webRequestBlocking"
+    ]
+
+}

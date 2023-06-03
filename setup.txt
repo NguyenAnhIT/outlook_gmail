@@ -1,0 +1,2 @@
+undetected-chromedriver==3.0.3
+pyqt6

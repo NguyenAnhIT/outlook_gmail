@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <style>
+        body {
+            overflow: hidden;
+            margin: 0px;
+            background: #D9D7F1;color: #303030;
+        }
+        .main{
+            width: 300px;
+            height: auto;
+        }
+        #showCookie {
+            width:400px;
+            height: 100px;
+            border-radius: 5px;
+            margin-bottom: 3px;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        }
+        .rows {
+            width: 400px;
+            height: 150px;
+            display: flex;
+            text-align: center;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        #SaveCookie{
+            border-radius: 3px;
+            width: 90px;
+            margin-left: 2px;
+            background-color:#FFFDDE;
+            margin-top: 3px;
+            color:black;
+            cursor: pointer;
+            transition:linear 0.1s
+            
+        }
+        #SaveCookie:hover{
+            background-color:#f5ed7e;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+            color:black;
+            
+        }
+        #LoadCookies{
+            border-radius: 3px;
+            width: 90px;
+            height: 25px;
+            background-color:#E7FBBE;
+            margin-top: 3px;
+            color:black;
+            transform: translateX(15%);
+            cursor: pointer;
+            transition:linear 0.1s
+        }
+        #LoadCookies:hover{
+            background-color:#d8f897;
+            color:black;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+            
+        }
+        #ClearCookie{
+            border-radius: 3px;
+            width: 90px;
+            height: 25px;
+            background-color:#FFCBCB;
+            margin-top: 3px;
+            transform: translateX(28%);
+            color:black;
+            cursor: pointer;
+            transition:linear 0.1s;
+        }
+        #ClearCookie:hover{
+            background-color:#f38c8c;
+            color:black;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        }
+        .profileLB{
+            background-color:black;
+            width: 300px;
+            height: 1px;
+            margin-bottom: 3px;
+            display: block;
+            
+        }
+        #listcookies{
+            height: 20px;
+            width: 300px;
+            background-color: rgb(56 108 216);
+            color:white;
+            text-align: center;
+            border-radius: 6px;
+            display: inline-block;
+            padding-top: 3px;
+            margin-top: 1px;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.4);
+            cursor: pointer;
+            transition: linear 0.2s;
+            font-size: 13px;
+
+        }
+        #listcookies:hover {
+            background-color:rgb(16, 76, 206);
+            color:rgb(255, 248, 248);
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.8);
+        }
+        .label{
+            background-color:black;
+            width: 300px;
+            color:white;
+            border-radius: 2px;
+            margin-bottom: 2px;;
+        }
+        .btn-text{
+            width: 300px;
+            display: block;
+            background-color:rgb(35, 88, 202);
+            border-radius:6px;
+        }
+        .btn-remove{
+            display: block;
+            width: 18px;
+            transform: translate(1550%,-100%);
+            background-color:rgb(35, 88, 202);
+            border-radius: 2px;
+        }
+        .btn-remove:hover{
+            transform: translate(1540%,-100%);
+            background-color:#f74d4d ;
+        }
+        .label-note{
+            background-color:#D6E5FA;
+            height: 125px;
+            transform: translateY(100%);
+        }
+        .li-text{
+            font-weight: bold;
+            transform: translate(-5% ,-10%);
+            margin-top: 3px;
+        }
+        h3{
+            width: 300px;
+            text-align: center;
+        }
+    </style>
+    <script src="popup.js"></script>
+</head>
+<body>
+    <div class="main">      
+        <div class="rows">
+            <label for="" class = 'label'>Cookie</label>
+            <textarea name="Cookie" id="showCookie" cols="15" rows="5"></textarea>
+            <button id="SaveCookie" type="button"  class="btn btnImport">SaveCookie</button>
+            <button id="LoadCookies" type="button" class="btn btnImport">LoadCookies</button>
+            <button id="ClearCookie" type="button" class="btn btnImport">LogoutFB</button>
+        </div>
+        <div class="rowslabel">
+            <div class='profileLB'></div>
+            </div>
+        </div>
+        <div class="label-note">
+            <h3>Giới thiệu</h3>
+            <ul>
+                <li class='li-text'>Tự Động Clear Bộ Nhớ Khi Lướt Facebook</li>
+                <li class='li-text'>Get Cookie Tự Động</li>
+                <li class='li-text'>Login Bằng Cookie Có Sẵn</li>
+                <li class='li-text'>Lưu Profile Login Chỉ Bằng 1 Click</li>
+                <li class='li-text'>Creater By Nguyễn Ánh</li>
+            </ul>
+        </div>
+    </div>
+    
+</body>
+</html>
