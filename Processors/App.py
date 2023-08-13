@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import tempfile
@@ -13,6 +14,7 @@ from Processors.Proxies.UnsecuredProxy import UnsecuredProxy
 from Processors.Helper import Helper
 from Processors.Gmail.Gmail import Gmail
 from Processors.Outlook.Outlook import Outlook
+from Processors.Gmail30Min.Gmail30Min import Gmail30Min
 
 class StartApp(Thread):
     def __init__(self,accounts = None,proxies = None,tableStatus=None,index = 0,index_thread = 0):
@@ -28,6 +30,9 @@ class StartApp(Thread):
         self.password = None
         self.process_gmail = Gmail()
         self.process_outlook = Outlook()
+        self.process_gmail30min = Gmail30Min()
+        self.configs = open(os.path.join(os.getcwd(),'Data','configs.json'),encoding='utf8').read()
+        self.configs = json.loads(self.configs)
 
 
 
@@ -80,6 +85,8 @@ class StartApp(Thread):
         sleep(0.5)
         self.browser.execute_script("""document.querySelector("body > settings-ui").shadowRoot.querySelector("#main").shadowRoot.querySelector("settings-basic-page").shadowRoot.querySelector("#basicPage > settings-section.expanded > settings-autofill-page").shadowRoot.querySelector("#passwordSection").shadowRoot.querySelector("#autosigninCheckbox").click()""")
         self.tableStatus.emit(self.index, 1, 'Đang kiểm tra')
+        self.browser.get('https://browserleaks.com/canvas')
+        sleep(3)
 
 
         #sleep(5000)
@@ -88,16 +95,25 @@ class StartApp(Thread):
 
     def handling(self):
         try:
-            username = self.list_accounts[self.index].split('|')[0]
-            password = self.list_accounts[self.index].split('|')[1]
-            email_backup = self.list_accounts[self.index].split('|')[2].strip('\n')
+            if self.list_accounts:
+                username = self.list_accounts[self.index].split('|')[0]
+                password = self.list_accounts[self.index].split('|')[1]
+                email_backup = self.list_accounts[self.index].split('|')[2].strip('\n')
+            else:
+                token = self.configs['key_gmail30min']
+                account = self.process_gmail30min.get_new_gmail(token=token)
+                username = account.split('|')[0]
+                password = account.split('|')[1]
+                email_backup = account.split('|')[2].strip('\n')
+                self.tableStatus.emit(self.index, 0, username)
             check = self.process_gmail.login(browser=self.browser,username=username,password=password,email_backup=email_backup)
             if check == 'Login Success':
                 self.tableStatus.emit(self.index, 1, 'Đăng nhập gmail thành công')
                 self.browser.execute_script("window.open('');")
                 sleep(0.5)
                 self.browser.switch_to.window(self.browser.window_handles[-1])
-                check = self.process_outlook.register(browser=self.browser,username=username,password=password)
+                password_outlook = self.configs['password_outlook']
+                check = self.process_outlook.register(browser=self.browser,username=username,password=password_outlook)
                 if check == 'Send Inbox':
                     self.browser.switch_to.window(self.browser.window_handles[0])
                     sleep(5)
@@ -113,7 +129,7 @@ class StartApp(Thread):
                     self.browser.switch_to.window(self.browser.window_handles[0])
                     check = self.process_outlook.send_code(browser=self.browser,code=code)
                     if check == 'Success':
-                        open('thanhcong.txt','a',encoding='utf8').write(self.list_accounts[self.index].strip('\n')+'\n')
+                        open('thanhcong.txt','a',encoding='utf8').write(username+'|'+password+'|'+email_backup.strip('\n')+f'|password_outlook:{password_outlook}'+'\n')
                         self.tableStatus.emit(self.index,1,'Thành công')
                         self.closeBrowser()
 

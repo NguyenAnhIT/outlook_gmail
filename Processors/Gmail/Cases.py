@@ -19,6 +19,12 @@ class Cases(object):
             except:
                 pass
 
+            try:
+                if 'https://gds.google.com' in str(self.browser.current_url):
+                    return 'Login Success'
+            except:
+                pass
+
 
 
 

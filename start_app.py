@@ -21,6 +21,7 @@ class UI(QMainWindow):
         self.tableWidget = self.findChild(QTableWidget,'tableWidget')
         self.spinBox_2 = self.findChild(QSpinBox,'spinBox_2')
         self.checkBox = self.findChild(QCheckBox,'checkBox')
+        self.listAccounts = None
         self.show()
         self.childThread = {}
 
@@ -40,6 +41,8 @@ class UI(QMainWindow):
 
 
     def start(self):
+        if self.listAccounts == None:
+            self.tableWidget.setRowCount(10000)
         for i in range(int(self.spinBox_2.value())):
             self.childThread[i] = StartQthread(index=i)
             self.childThread[i].listAccounts = self.listAccounts
@@ -59,18 +62,33 @@ class StartQthread(QThread):
     def run(self):
         global count
         # sau đó truyển tham số vào proxy = proxy
-        while count < len(self.listAccounts)-1:
-            count += 1
-            self.count=count
-            if self.checkBox.isChecked():
-                proxy = self.call_api_proxy(port=40000)
-                proxies = proxy
-            else:
-                proxies = None
-            startapp = StartApp(accounts=self.listAccounts,tableStatus=self.tableStatus,index\
-                =self.count,index_thread=self.index,proxies=proxies)
-            startapp.start()
-            startapp.join()
+        if self.listAccounts:
+            while count < len(self.listAccounts)-1:
+                count += 1
+                self.count=count
+                if self.checkBox.isChecked():
+                    proxy = self.call_api_proxy(port=40000)
+                    proxies = proxy
+                else:
+                    proxies = None
+                startapp = StartApp(accounts=self.listAccounts,tableStatus=self.tableStatus,index\
+                    =self.count,index_thread=self.index,proxies=proxies)
+                startapp.start()
+                startapp.join()
+        # su ly mua mail tu api
+        else:
+            while True:
+                count += 1
+                self.count = count
+                if self.checkBox.isChecked():
+                    proxy = self.call_api_proxy(port=40000)
+                    proxies = proxy
+                else:
+                    proxies = None
+                startapp = StartApp(accounts=self.listAccounts, tableStatus=self.tableStatus, index \
+                    =self.count, index_thread=self.index, proxies=proxies)
+                startapp.start()
+                startapp.join()
 
 
     def call_api_proxy(self,port=40000):

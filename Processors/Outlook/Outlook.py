@@ -65,6 +65,7 @@ class Outlook(object):
             sleep(3)
             cases = Cases(browser=self.browser)
             while True:
+                sleep(1)
                 check = cases.check_cases()
                 if check == 'Captcha':
                     self.auto_captcha()
@@ -72,7 +73,7 @@ class Outlook(object):
                     #print('a')
                 elif check == 'Success':
                     self.browser.find_element_by_css_selector('#idSIButton9').click()
-                    sleep(5)
+                    sleep(6)
                     return 'Success'
                 elif check == 'Continue':
                     self.browser.find_element_by_css_selector('button').click()
@@ -82,41 +83,30 @@ class Outlook(object):
 
 
         except:
-            # import traceback
-            # traceback.print_exc()
-            pass
+            import traceback
+            traceback.print_exc()
 
     def processGetTokenAnyCaptcha(self, timeout=3):
         sleep(timeout)
-        url = "https://api.anycaptcha.com/getTaskResult"
-        payloads = {
-            "clientKey": self.apiAnycaptcha,
-            "taskId": int(self.taskID)
-        }
-        response = requests.post(url, json=payloads).json()
-        if response.get("status", '') == "ready" and response["errorId"] == 0:
-            return response["solution"]["token"]
-        elif response.get("status", '') == "processing" and response["errorId"] == 0:
-            return self.processGetTokenAnyCaptcha(timeout=3)
-        elif response['errorId'] == 1:
+        url = f"https://api.1stcaptcha.com/getresult?apikey={self.apiAnycaptcha}&taskid={self.taskID}"
+        response = requests.get(url).json()
+        print(response)
+        if response.get("Status", '') == "SUCCESS":
+            return response["Data"]["Token"]
+        elif response.get('Status','') == 'ERROR':
             self.processGetTaskAnyCaptcha()
-            return self.processGetTokenAnyCaptcha(timeout=3)
+            sleep(5)
+            self.processGetTokenAnyCaptcha()
         else:
-            print('Hệ thống anycaptcha đang gặp lỗi !')
-            exit()
+            sleep(5)
+            return self.processGetTokenAnyCaptcha(timeout=3)
+
 
     def processGetTaskAnyCaptcha(self):
-        self.apiAnycaptcha = self.configs['api_anycaptcha']
-        payloads = {
-            "clientKey": f"{self.apiAnycaptcha}",
-            "task": {
-                "type": "FunCaptchaTaskProxyless",
-                "websiteURL": "https://signup.live.com/signup?lic=1&uaid=9b23f83c11f440f8993626a59f3aac7f",
-                "websitePublicKey": "B7D8911C-5CC8-A9A3-35B0-554ACEE604DA",
-            }
-        }
-        response = requests.post("https://api.anycaptcha.com/createTask", json=payloads).json()
-        taskId = response.get('taskId', '')
+        self.apiAnycaptcha = self.configs['api_1stcaptcha']
+        response = requests.get(f"https://api.1stcaptcha.com/funcaptchatokentask?apikey={self.apiAnycaptcha}&sitekey=B7D8911C-5CC8-A9A3-35B0-554ACEE604DA&siteurl=https%3A%2F%2Fsignup.live.com").json()
+        print(response)
+        taskId = response.get('TaskId', '')
         if bool(taskId):
             self.taskID = taskId
         else:
@@ -125,7 +115,7 @@ class Outlook(object):
 
     def auto_captcha(self):
         self.processGetTaskAnyCaptcha()
-        sleep(1)
+        sleep(10)
         token = self.processGetTokenAnyCaptcha()
         print(token)
         self.browser.execute_script("""var anyCaptchaToken = '%s';

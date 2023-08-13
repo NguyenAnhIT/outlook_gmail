@@ -51,7 +51,7 @@ class Gmail(object):
                 if 'Verify your email address' in tr.text:
                     tr.click()
                     break
-            sleep(4)
+            sleep(5)
             code = self.get_code_from_inbox()
             if len(code)>3:
                 return code
@@ -70,7 +70,7 @@ class Gmail(object):
         for tr in list_tr:
             #print(tr.text)
             if 'address use this security code' in tr.text:
-                code = tr.text.split(':')[1][1:5]
+                code = tr.text.split(':')[1]
                 return code
 
 
